@@ -30,8 +30,9 @@ public class PlayerFactory {
         playerCreator.put(OnePlayBot.class, OnePlayBot::new);
         playerCreator.put(BuggyBot.class, BuggyBot::new);
         playerCreator.put(BasicBlockBot.class, BasicBlockBot::new);
-//        playerCreator.put(Progressive.class, Progressive::new);
         playerCreator.put(Progressive.class, Progressive::new);
+        playerCreator.put(StraightForwardBot.class, StraightForwardBot::new);
+        playerCreator.put(PackingBot.class, PackingBot::new);
     }
 
 
