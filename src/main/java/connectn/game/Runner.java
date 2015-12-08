@@ -48,6 +48,9 @@ public class Runner {
         Map<Class<? extends Player>, Integer> totalScore = winningCounts(winners);
 
         System.out.println(prettyPrintScore(totalScore));
+
+        if (SHOW_STATISTICS)
+            printStatistics(games, winners);
     }
 
     private Class<? extends Player> runGame(List<Player> players) {
@@ -57,8 +60,8 @@ public class Runner {
         return game.getWinner();
     }
 
-    private Map<Class<? extends Player>, Integer>
-            winningCounts(List<Class<? extends Player>> gameResults) {
+    private Map<Class<? extends Player>, Integer> winningCounts
+                (List<Class<? extends Player>> gameResults) {
 
         HashSet<Class<? extends Player>> losers = new HashSet<>(PlayerFactory.getPlayerTypes());
         losers.removeAll(gameResults);
@@ -97,6 +100,7 @@ public class Runner {
         return ret.toString();
     }
 
+
     private List<List<Class<? extends Player>>> playerCombinations = ListUtil.combinations(new ArrayList<Iterable<Class<? extends Player>>>() {{
         add(allPlayers);
         add(allPlayers);
@@ -108,6 +112,7 @@ public class Runner {
         playerPosition = ++playerPosition % (playerCombinations.size() - 1);
 
         List<Player> players = PlayerFactory.create(playerCombinations.get(playerPosition));
+        Collections.shuffle(players, ThreadLocalRandom.current());
 
         int nextId = 1;
         for (Player player : players)
@@ -117,20 +122,42 @@ public class Runner {
     }
 
     // todo // FIXME: 12/08/15
-//    private static void printStatistics
-//            (List<List<Class<? extends Player>>> gameSets,
-//             List<Class<? extends Player>> winners) {
-//
-//        HashMap<Set<Class<? extends Player>>, List<Class<? extends Player>>> lineupScorePairs = new HashMap<>();
-//
-//        for (int i = 0; i < gameSets.size(); i++) {
-//            HashSet<Class<? extends Player>> gameSet = new HashSet<>(gameSets.get(i));
-//            Class<? extends Player> winner = winners.get(i);
-//
-//            lineupScorePairs.putIfAbsent(gameSet, new ArrayList<>());
-//            lineupScorePairs.get(gameSet).add(winner);
-//        }
+    private void printStatistics
+            (List<List<Player>> gameSets,
+             List<Class<? extends Player>> winners) {
 
-//        lineupScorePairs.forEach((key, ) -> );
-//    }
+        HashMap<List<Class<? extends Player>>, List<Class<? extends Player>>> lineupWinnerPairs = new HashMap<>();
+
+        for (int i = 0; i < gameSets.size(); i++) {
+            List<Class<? extends Player>> gameSet = new ArrayList<>();
+            List<Player> gameSetAsPlayer = gameSets.get(i);
+            for (Player player : gameSetAsPlayer)
+                gameSet.add(player.getClass());
+
+            Class<? extends Player> winner = winners.get(i);
+
+            lineupWinnerPairs.putIfAbsent(gameSet, new ArrayList<>());
+            lineupWinnerPairs.get(gameSet).add(winner);
+        }
+
+        HashMap<List<Class<? extends Player>>, Map<Class<? extends Player>, Integer>> lineupScorePairs = new HashMap<>();
+
+        lineupWinnerPairs.forEach((classes, classes2) -> {
+            Map<Class<? extends Player>, Integer> winningCount = winningCounts(classes2);
+
+            Iterator<Map.Entry<Class<? extends Player>, Integer>> iterator = winningCount.entrySet().iterator();
+            while (iterator.hasNext())
+                if (iterator.next().getValue() == 0) iterator.remove();
+
+
+            lineupScorePairs.put(classes, winningCount);
+        });
+
+
+        lineupScorePairs.forEach((key, wins) -> {
+            System.out.println(key);
+            System.out.println(
+                    prettyPrintScore(wins));
+        });
+    }
 }
