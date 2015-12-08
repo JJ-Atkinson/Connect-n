@@ -105,7 +105,7 @@ public class Runner {
         add(allPlayers);
         add(allPlayers);
         add(allPlayers);
-    }});
+    }}).stream().filter(lst -> new HashSet<>(lst).size() == lst.size()).collect(Collectors.toList());
     private int playerPosition = 0;
 
     public List<Player> generateNextPlayers() {
