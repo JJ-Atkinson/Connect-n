@@ -55,6 +55,7 @@ public class Game {
         int[][] directionVectors = new int[][]{
                 new int[]{1, 0},
                 new int[]{1, 1},
+                new int[]{-1, 1},
                 new int[]{0, 1}
         };
 
