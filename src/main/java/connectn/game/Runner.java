@@ -3,6 +3,7 @@ package connectn.game;
 import connectn.players.Player;
 import connectn.util.ListUtil;
 
+import java.nio.channels.Pipe;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
@@ -18,10 +19,9 @@ import static java.util.stream.Collectors.summingInt;
 public class Runner {
     private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
-    public static int MINIMUM_NUMBER_OF_GAMES = 15000;
+    public static int MINIMUM_NUMBER_OF_GAMES = 100000;
     private static int actNumberOfRounds = -1;
 
-    private List<Class<? extends Player>> unusedPlayers;
     private Set<Class<? extends Player>> allPlayers;
 
     static {
@@ -31,7 +31,6 @@ public class Runner {
 
 
     {
-        unusedPlayers = PlayerFactory.getPlayerTypes();
         allPlayers = new HashSet<>(PlayerFactory.getPlayerTypes());
     }
 
@@ -42,6 +41,7 @@ public class Runner {
                 .mapToObj(value -> generateNextPlayers()).collect(Collectors.toList());
         List<Class<? extends Player>> winners = games.stream()
                 .parallel()
+                .unordered()
                 .map(this::runGame)
                 .collect(Collectors.toList());
 
