@@ -1,6 +1,7 @@
 package connectn.game;
 
 import connectn.players.Player;
+import connectn.util.ListUtil;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,27 +16,33 @@ import static java.util.stream.Collectors.summingInt;
  * Created by Jarrett on 12/07/15.
  */
 public class Runner {
+    private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
     public static int MINIMUM_NUMBER_OF_GAMES = 15000;
     private static int actNumberOfRounds = -1;
 
-    private static List<Class<? extends Player>> unusedPlayers;
-    private static Set<Class<? extends Player>> allPlayers;
+    private List<Class<? extends Player>> unusedPlayers;
+    private Set<Class<? extends Player>> allPlayers;
 
     static {
         actNumberOfRounds = Math.max(MINIMUM_NUMBER_OF_GAMES * PlayerFactory.playerCreator.size() / PLAYERS_PER_GAME + 1,
                 MINIMUM_NUMBER_OF_GAMES);
+    }
+
+
+    {
         unusedPlayers = PlayerFactory.getPlayerTypes();
         allPlayers = new HashSet<>(PlayerFactory.getPlayerTypes());
     }
 
-    public static void runGames() {
+
+    public void runGames() {
         List<List<Player>> games = IntStream
                 .range(0, actNumberOfRounds - 1)
                 .mapToObj(value -> generateNextPlayers()).collect(Collectors.toList());
         List<Class<? extends Player>> winners = games.stream()
                 .parallel()
-                .map(Runner::runGame)
+                .map(this::runGame)
                 .collect(Collectors.toList());
 
         Map<Class<? extends Player>, Integer> totalScore = winningCounts(winners);
@@ -43,14 +50,16 @@ public class Runner {
         System.out.println(prettyPrintScore(totalScore));
     }
 
-    private static Class<? extends Player> runGame(List<Player> players) {
+    private Class<? extends Player> runGame(List<Player> players) {
         Game game = new Game(players);
         game.runGame();
 
         return game.getWinner();
     }
 
-    private static Map<Class<? extends Player>, Integer> winningCounts(List<Class<? extends Player>> gameResults) {
+    private Map<Class<? extends Player>, Integer>
+            winningCounts(List<Class<? extends Player>> gameResults) {
+
         HashSet<Class<? extends Player>> losers = new HashSet<>(PlayerFactory.getPlayerTypes());
         losers.removeAll(gameResults);
 
@@ -69,10 +78,11 @@ public class Runner {
         return winners;
     }
 
-    private static String prettyPrintScore(Map<Class<? extends Player>, Integer> scores) {
+    private String prettyPrintScore(Map<Class<? extends Player>, Integer> scores) {
         StringBuilder ret = new StringBuilder();
 
-        ArrayList<Map.Entry<Class<? extends Player>, Integer>> scorePairsAsList = new ArrayList<>(scores.entrySet());
+        ArrayList<Map.Entry<Class<? extends Player>, Integer>>
+                scorePairsAsList = new ArrayList<>(scores.entrySet());
         Collections.sort(scorePairsAsList,
                 (o1, o2) -> -Integer.compare(
                         (int) ((Map.Entry) (o1)).getValue(),
@@ -87,24 +97,17 @@ public class Runner {
         return ret.toString();
     }
 
-    private static List<Player> generateNextPlayers() {
-        List<Player> players = new ArrayList<>();
-        while (players.size() < PLAYERS_PER_GAME) {
-            int playerDeficient = PLAYERS_PER_GAME - players.size();
-            List<Class<? extends Player>> toUse;
-            if (unusedPlayers.size() <= playerDeficient) {
-                toUse = unusedPlayers;
-            } else {
-                Collections.shuffle(unusedPlayers, ThreadLocalRandom.current());
-                toUse = unusedPlayers.subList(0, playerDeficient);
-            }
-            players.addAll(PlayerFactory.create(toUse));
-            unusedPlayers.removeAll(toUse);
-            if (unusedPlayers.size() == 0) {
-                unusedPlayers.addAll(allPlayers);
-            }
-        }
-        Collections.shuffle(players, ThreadLocalRandom.current());
+    private List<List<Class<? extends Player>>> playerCombinations = ListUtil.combinations(new ArrayList<Iterable<Class<? extends Player>>>() {{
+        add(allPlayers);
+        add(allPlayers);
+        add(allPlayers);
+    }});
+    private int playerPosition = 0;
+
+    public List<Player> generateNextPlayers() {
+        playerPosition = ++playerPosition % (playerCombinations.size() - 1);
+
+        List<Player> players = PlayerFactory.create(playerCombinations.get(playerPosition));
 
         int nextId = 1;
         for (Player player : players)
@@ -112,4 +115,22 @@ public class Runner {
 
         return players;
     }
+
+    // todo // FIXME: 12/08/15
+//    private static void printStaticstics
+//            (List<List<Class<? extends Player>>> gameSets,
+//             List<Class<? extends Player>> winners) {
+//
+//        HashMap<Set<Class<? extends Player>>, List<Class<? extends Player>>> lineupScorePairs = new HashMap<>();
+//
+//        for (int i = 0; i < gameSets.size(); i++) {
+//            HashSet<Class<? extends Player>> gameSet = new HashSet<>(gameSets.get(i));
+//            Class<? extends Player> winner = winners.get(i);
+//
+//            lineupScorePairs.putIfAbsent(gameSet, new ArrayList<>());
+//            lineupScorePairs.get(gameSet).add(winner);
+//        }
+
+//        lineupScorePairs.forEach((key, ) -> );
+//    }
 }
