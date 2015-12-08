@@ -35,7 +35,7 @@ public class BasicBlockBot extends Player {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 int currId = board[i][j];
-                if (currId != -1 && is4InARowVertical(i, j, board)) {
+                if (currId != EMPTY_CELL && is4InARowVertical(i, j, board)) {
                     ret.add(i);
                 }
             }

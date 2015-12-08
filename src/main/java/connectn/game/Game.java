@@ -11,6 +11,7 @@ import java.util.Map;
  * Created by Jarrett on 12/07/15.
  */
 public class Game {
+    public final static int EMPTY_CELL = -1;
 
     private final static int TURNS_PER_PLAYER = 24;
     /**
@@ -61,7 +62,7 @@ public class Game {
             for (int j = 0; j < board[i].length; j++) {
                 int currId = board[i][j];
 
-                if (currId != -1)
+                if (currId != EMPTY_CELL)
                     for (int[] directionVector : directionVectors)
                         if (is4InARow(i, j, directionVector))
                             idToScore.put(currId, idToScore.get(currId) + 1);
@@ -108,7 +109,7 @@ public class Game {
 
     private void move(int playerId, int coll) {
         for (int i = 0; i < board[coll].length; i++) {
-            if (board[coll][i] == -1) {
+            if (board[coll][i] == EMPTY_CELL) {
                 board[coll][i] = playerId;
                 return;
             }
@@ -130,7 +131,7 @@ public class Game {
 
         for (int i = 0; i < ret.length; i++)
             for (int j = 0; j < ret[i].length; j++)
-                ret[i][j] = -1;
+                ret[i][j] = EMPTY_CELL;
 
         return ret;
     }
@@ -139,7 +140,7 @@ public class Game {
         if (!boardContains(coll, 0))
             return false;
 
-        return board[coll][board[coll].length - 1] == -1;
+        return board[coll][board[coll].length - 1] == EMPTY_CELL;
     }
 
     public boolean boardContains(int coll, int row) {

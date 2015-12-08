@@ -8,6 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by Jarrett on 12/07/15.
  */
 public abstract class Player {
+    public final static int EMPTY_CELL = Game.EMPTY_CELL;
+
     private int ID;
     private Game game;
 
