@@ -1,5 +1,6 @@
 package connectn.game;
 
+import connectn.players.Draw;
 import connectn.players.Player;
 
 import java.util.*;
@@ -90,7 +91,7 @@ public class Game {
 
     /**
      *
-     * @return the class of the winner or null if a draw occurs
+     * @return the class of the winner or Draw.class if a draw occurs
      */
     public Class<? extends Player> getWinner() {
         Map<Class<? extends Player>, Integer> scoreCard = scoreGame();
@@ -103,7 +104,7 @@ public class Game {
                 .collect(Collectors.toList());
 
         if (Objects.equals(sorted.get(0).getValue(), sorted.get(1).getValue()))
-            return null;
+            return Draw.class;
 
         return sorted.get(0).getKey();
     }

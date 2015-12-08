@@ -35,6 +35,7 @@ public class PlayerFactory {
         playerCreator.put(PackingBot.class, PackingBot::new);
         playerCreator.put(JealousBot.class, JealousBot::new);
         playerCreator.put(RowBot.class, RowBot::new);
+        playerCreator.put(Steve.class, Steve::new);
     }
 
 
