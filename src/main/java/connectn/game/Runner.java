@@ -3,7 +3,6 @@ package connectn.game;
 import connectn.players.Player;
 import connectn.util.ListUtil;
 
-import java.nio.channels.Pipe;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
@@ -19,7 +18,7 @@ import static java.util.stream.Collectors.summingInt;
 public class Runner {
     private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
-    public static int MINIMUM_NUMBER_OF_GAMES = 100000;
+    public static int MINIMUM_NUMBER_OF_GAMES = 4;
     private static int actNumberOfRounds = -1;
 
     private Set<Class<? extends Player>> allPlayers;
@@ -43,6 +42,7 @@ public class Runner {
                 .parallel()
                 .unordered()
                 .map(this::runGame)
+                .filter(x -> x != null)
                 .collect(Collectors.toList());
 
         Map<Class<? extends Player>, Integer> totalScore = winningCounts(winners);
@@ -53,12 +53,14 @@ public class Runner {
             printStatistics(games, winners);
     }
 
+
     private Class<? extends Player> runGame(List<Player> players) {
         Game game = new Game(players);
         game.runGame();
 
         return game.getWinner();
     }
+
 
     private Map<Class<? extends Player>, Integer> winningCounts
                 (List<Class<? extends Player>> gameResults) {
@@ -80,6 +82,7 @@ public class Runner {
 
         return winners;
     }
+
 
     private String prettyPrintScore(Map<Class<? extends Player>, Integer> scores) {
         StringBuilder ret = new StringBuilder();
@@ -121,7 +124,7 @@ public class Runner {
         return players;
     }
 
-    // todo // FIXME: 12/08/15
+
     private void printStatistics
             (List<List<Player>> gameSets,
              List<Class<? extends Player>> winners) {

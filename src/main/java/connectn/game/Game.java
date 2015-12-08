@@ -2,10 +2,10 @@ package connectn.game;
 
 import connectn.players.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Jarrett on 12/07/15.
@@ -88,17 +88,24 @@ public class Game {
         return true;
     }
 
+    /**
+     *
+     * @return the class of the winner or null if a draw occurs
+     */
     public Class<? extends Player> getWinner() {
         Map<Class<? extends Player>, Integer> scoreCard = scoreGame();
 
-        Map.Entry<Class<? extends Player>, Integer> winner =
-                scoreCard.entrySet()
-                        .stream()
-                        .max((o1, o2) -> Integer.compare(
-                                (int) ((Map.Entry) (o1)).getValue(),
-                                (int) ((Map.Entry) (o2)).getValue())).get();
+        List<Map.Entry<Class<? extends Player>, Integer>> sorted = scoreCard.entrySet()
+                .stream()
+                .sorted((o1, o2) -> -Integer.compare(
+                        (int) ((Map.Entry) (o1)).getValue(),
+                        (int) ((Map.Entry) (o2)).getValue()))
+                .collect(Collectors.toList());
 
-        return winner.getKey();
+        if (Objects.equals(sorted.get(0).getValue(), sorted.get(1).getValue()))
+            return null;
+
+        return sorted.get(0).getKey();
     }
 
     private void doPlayerMove(Player player) {
