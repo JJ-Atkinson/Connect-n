@@ -33,6 +33,7 @@ public class PlayerFactory {
         playerCreator.put(Progressive.class, Progressive::new);
         playerCreator.put(StraightForwardBot.class, StraightForwardBot::new);
         playerCreator.put(PackingBot.class, PackingBot::new);
+        playerCreator.put(JealousBot.class, JealousBot::new);
     }
 
 
