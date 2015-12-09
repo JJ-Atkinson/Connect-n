@@ -2,12 +2,11 @@ package connectn.game;
 
 import connectn.players.Draw;
 import connectn.players.Player;
+import javafx.util.Pair;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
  * Created by Jarrett on 12/07/15.
  */
@@ -22,8 +21,10 @@ public class Game {
     private final int[][] board;
     private final List<Player> players;
     private final Map<Integer, Class<? extends Player>> idToClass;
-
+    private final List<Pair<Integer, Integer>> history = new ArrayList<>();
+    private boolean finished = false;
     private int turn = 0;
+
 
     public Game(List<Player> players) {
         board = genBoard(players.size());
@@ -45,7 +46,7 @@ public class Game {
 
             playerList.forEach(this::doPlayerMove);
         }
-
+        finished = true;
     }
 
     public Map<Class<? extends Player>, Integer> scoreGame() {
@@ -112,8 +113,10 @@ public class Game {
     private void doPlayerMove(Player player) {
         int attemptedMove = player.makeMove();
 
-        if (ensureValidMove(attemptedMove))
+        if (ensureValidMove(attemptedMove)) {
             move(player.getID(), attemptedMove);
+            history.add(new Pair<>(player.getID(), attemptedMove));
+        }
     }
 
     private void move(int playerId, int coll) {
@@ -182,5 +185,28 @@ public class Game {
 //                ret.append(Arrays.toString(board[i])).append('\n');
 
         return ret.toString();
+    }
+
+    /**
+     * View all history for each player
+     * @return player id and the coll the piece was dropped into (doesn't include invalid moves)
+     */
+    public List<Pair<Integer, Integer>> getHistory() {
+        return history;
+    }
+
+    /**
+     * This is not for access by players, just debuggers.
+     * @return
+     * @throws InvalidStateException
+     */
+    public List<Pair<Class<? extends Player>, Integer>> getPlayerHistory() throws InvalidStateException {
+        if (!finished)
+            throw new InvalidStateException("Unable to call until finished processing game");
+
+        return history
+                .stream()
+                .map(x -> new Pair<Class<? extends Player>, Integer>(idToClass.get(x.getKey()), x.getValue()))
+                .collect(Collectors.toList());
     }
 }
