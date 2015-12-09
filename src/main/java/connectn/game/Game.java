@@ -96,6 +96,7 @@ public class Game {
      */
     public Class<? extends Player> getWinner() {
         Map<Class<? extends Player>, Integer> scoreCard = scoreGame();
+//        System.out.println(scoreCard);
 
         List<Map.Entry<Class<? extends Player>, Integer>> sorted = scoreCard.entrySet()
                 .stream()

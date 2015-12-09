@@ -11,32 +11,21 @@ import static java.util.stream.Collectors.toCollection;
  * Created by Jarrett on 12/07/15.
  */
 public class PlayerFactory {
-    public static Set<Player> createAllPlayers() {
-        Set<Player> ret = new HashSet<>();
+    public final static Map<Class<? extends Player>, Supplier<? extends Player>> playerCreator =
+            new HashMap<Class<? extends Player>, Supplier<? extends Player>>() {{
 
-        playerCreator.forEach((aClass, supplier) -> ret.add(supplier.get()));
+        put(RandomBot.class, RandomBot::new);
+        put(OnePlayBot.class, OnePlayBot::new);
+        put(BuggyBot.class, BuggyBot::new);
+        put(BasicBlockBot.class, BasicBlockBot::new);
+        put(Progressive.class, Progressive::new);
+        put(StraightForwardBot.class, StraightForwardBot::new);
+        put(PackingBot.class, PackingBot::new);
+        put(JealousBot.class, JealousBot::new);
+        put(RowBot.class, RowBot::new);
+        put(Steve.class, Steve::new);
 
-        int nextId = 1;
-        for (Player player : ret)
-            player.setID(nextId++);
-
-        return ret;
-    }
-
-    public final static Map<Class<? extends Player>, Supplier<? extends Player>> playerCreator = new HashMap<>();
-
-    static {
-        playerCreator.put(RandomBot.class, RandomBot::new);
-        playerCreator.put(OnePlayBot.class, OnePlayBot::new);
-        playerCreator.put(BuggyBot.class, BuggyBot::new);
-        playerCreator.put(BasicBlockBot.class, BasicBlockBot::new);
-        playerCreator.put(Progressive.class, Progressive::new);
-        playerCreator.put(StraightForwardBot.class, StraightForwardBot::new);
-        playerCreator.put(PackingBot.class, PackingBot::new);
-        playerCreator.put(JealousBot.class, JealousBot::new);
-        playerCreator.put(RowBot.class, RowBot::new);
-        playerCreator.put(Steve.class, Steve::new);
-    }
+    }};
 
 
     public static List<Class<? extends Player>> getPlayerTypes() {

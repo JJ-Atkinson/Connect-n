@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.summingInt;
 public class Runner {
     private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
-    public static int MINIMUM_NUMBER_OF_GAMES = 50000;
+    public static int MINIMUM_NUMBER_OF_GAMES = 100000;
     private static int actNumberOfRounds = -1;
 
     private Set<Class<? extends Player>> allPlayers;
@@ -42,7 +42,6 @@ public class Runner {
                 .parallel()
                 .unordered()
                 .map(this::runGame)
-//                .filter(x -> x != null)
                 .collect(Collectors.toList());
 
         Map<Class<? extends Player>, Integer> totalScore = winningCounts(winners);
