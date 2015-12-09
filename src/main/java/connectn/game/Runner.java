@@ -19,28 +19,17 @@ public class Runner {
     private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
     public static int MINIMUM_NUMBER_OF_GAMES = 100000;
-    private static int actNumberOfRounds = -1;
-
-    private Set<Class<? extends Player>> allPlayers;
-
-    static {
-        actNumberOfRounds = Math.max(MINIMUM_NUMBER_OF_GAMES * PlayerFactory.playerCreator.size() / PLAYERS_PER_GAME + 1,
-                MINIMUM_NUMBER_OF_GAMES);
-    }
-
-
-    {
-        allPlayers = new HashSet<>(PlayerFactory.getPlayerTypes());
-    }
 
 
     public void runGames() {
+        int actNumberOfRounds = Math.max(MINIMUM_NUMBER_OF_GAMES * PlayerFactory.playerCreator.size() / PLAYERS_PER_GAME + 1,
+                MINIMUM_NUMBER_OF_GAMES);
+
         List<List<Player>> games = IntStream
                 .range(0, actNumberOfRounds - 1)
                 .mapToObj(value -> generateNextPlayers()).collect(Collectors.toList());
         List<Class<? extends Player>> winners = games.stream()
                 .parallel()
-                .unordered()
                 .map(this::runGame)
                 .collect(Collectors.toList());
 
@@ -104,6 +93,7 @@ public class Runner {
 
 
     private List<List<Class<? extends Player>>> playerCombinations = ListUtil.combinations(new ArrayList<Iterable<Class<? extends Player>>>() {{
+        List<Class<? extends Player>> allPlayers = PlayerFactory.getPlayerTypes();
         add(allPlayers);
         add(allPlayers);
         add(allPlayers);
