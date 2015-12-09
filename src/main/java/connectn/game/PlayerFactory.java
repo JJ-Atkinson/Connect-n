@@ -24,6 +24,7 @@ public class PlayerFactory {
         put(JealousBot.class, JealousBot::new);
         put(RowBot.class, RowBot::new);
         put(Steve.class, Steve::new);
+        put(MaxGayne.class, MaxGayne::new);
 
     }};
 
