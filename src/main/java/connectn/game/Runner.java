@@ -18,25 +18,26 @@ import static java.util.stream.Collectors.summingInt;
 public class Runner {
     private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
-    public static int MINIMUM_NUMBER_OF_GAMES = 100000;
+    public static int NUMBER_OF_GAMES = 100000;
 
 
     public void runGames() {
-        int actNumberOfRounds = Math.max(MINIMUM_NUMBER_OF_GAMES * PlayerFactory.playerCreator.size() / PLAYERS_PER_GAME + 1,
-                MINIMUM_NUMBER_OF_GAMES);
 
         List<List<Player>> games = IntStream
-                .range(0, actNumberOfRounds - 1)
+                .range(0, NUMBER_OF_GAMES)
                 .mapToObj(value -> generateNextPlayers()).collect(Collectors.toList());
-        List<Class<? extends Player>> winners = games.stream()
-                .parallel()
-                .map(this::runGame)
-                .collect(Collectors.toList());
+        List<Class<? extends Player>> winners = new ArrayList<>();
+        for (int i = 0; i < games.size(); i++) {
+            winners.add(runGame(games.get(i)));
+        }
+//                .parallel()
+//                .map(this::runGame)
+//                .collect(Collectors.toList());
+
+
 
         Map<Class<? extends Player>, Integer> totalScore = winningCounts(winners);
-
         System.out.println(prettyPrintScore(totalScore));
-
         if (SHOW_STATISTICS)
             printStatistics(games, winners);
     }
@@ -147,7 +148,10 @@ public class Runner {
 
 
         lineupScorePairs.forEach((key, wins) -> {
-            System.out.println(key);
+            for (Class<? extends Player> aClass : key) {
+                System.out.print(aClass.getSimpleName() + ", ");
+            }
+            System.out.println();
             System.out.println(
                     prettyPrintScore(wins));
         });
