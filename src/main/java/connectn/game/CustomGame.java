@@ -1,9 +1,6 @@
 package connectn.game;
 
-import connectn.players.MaxGayne;
-import connectn.players.Player;
-import connectn.players.RowBot;
-import connectn.players.UserBot;
+import connectn.players.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +22,8 @@ public class CustomGame {
         List<Player> players = new ArrayList<Player>() {
             {
                 add(new UserBot());
-                add(new RowBot());
+//                add(new RowBot());
+                add(new UserBot2());
                 add(new MaxGayne());
             }
         };

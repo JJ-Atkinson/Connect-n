@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Game {
     public final static int EMPTY_CELL = -1;
 
-    private final static int TURNS_PER_PLAYER = 24;
+    private final static int TURNS_PER_PLAYER = 27;
     /**
      * Board is a 2d array of ints representing player ids.
      * Access as [coll][row from bottom].
@@ -27,7 +27,7 @@ public class Game {
 
 
     public Game(List<Player> players) {
-        board = genBoard(players.size());
+        board = genBoard();
         this.players = players;
 
         for (Player player : players)
@@ -138,8 +138,8 @@ public class Game {
         return ret;
     }
 
-    private static int[][] genBoard(int playerCount) {
-        int size = (int) Math.ceil(Math.sqrt(playerCount * TURNS_PER_PLAYER));
+    private static int[][] genBoard() {
+        int size = 9;
         int[][] ret = new int[size][size];
 
         for (int i = 0; i < ret.length; i++)

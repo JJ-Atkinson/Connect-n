@@ -30,7 +30,9 @@ public class UserBot extends Player {
         int input = -1;
         try {
             input = Integer.parseInt(reader.readLine());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (!ensureValidMove(input))
             System.err.println("Turn skipped");
@@ -64,9 +66,9 @@ public class UserBot extends Player {
         StringBuilder ret = new StringBuilder();
         int height = board[0].length - 1;
         for (int j = height; j >= 0; j--) {
-            for (int i = 0; i < board.length; i++)
+            for (int i = 0; i < board.length; i++) {
                 ret.append(getChrForId(board[i][j]));
-
+            }
             ret.append('\n');
         }
         return ret.toString();
