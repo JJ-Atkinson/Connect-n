@@ -31,7 +31,7 @@ public class UserBot extends Player {
         try {
             input = Integer.parseInt(reader.readLine());
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         if (!ensureValidMove(input))
@@ -79,11 +79,11 @@ public class UserBot extends Player {
             case -1:
                 return " _";
             case 0:
-                return " *";
+                return " 0";
             case 1:
-                return " +";
+                return " |";
             case 2:
-                return " ~";
+                return " +";
         }
         return "";
     }

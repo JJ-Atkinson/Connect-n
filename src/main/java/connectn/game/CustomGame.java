@@ -22,9 +22,9 @@ public class CustomGame {
         List<Player> players = new ArrayList<Player>() {
             {
                 add(new UserBot());
-//                add(new RowBot());
                 add(new UserBot2());
-                add(new MaxGayne());
+                add(new BasicBlockBot());
+//                add(new MaxGayne());
             }
         };
 

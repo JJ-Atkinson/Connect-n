@@ -25,7 +25,9 @@ public class PlayerFactory {
                 put(RowBot.class, RowBot::new);
                 put(Steve.class, Steve::new);
                 put(MaxGayne.class, MaxGayne::new);
+                put(FairDiceRoll.class, FairDiceRoll::new);
             }};
+
 
 
     public static List<Class<? extends Player>> getPlayerTypes() {
