@@ -78,11 +78,11 @@ public class UserBot extends Player {
         switch (id) {
             case -1:
                 return " _";
-            case 0:
-                return " 0";
             case 1:
-                return " |";
+                return " 0";
             case 2:
+                return " |";
+            case 3:
                 return " +";
         }
         return "";

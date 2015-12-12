@@ -22,14 +22,14 @@ public class CustomGame {
         List<Player> players = new ArrayList<Player>() {
             {
                 add(new UserBot());
-                add(new UserBot2());
+//                add(new UserBot2());
                 add(new BasicBlockBot());
-//                add(new MaxGayne());
+                add(new MaxGayne());
             }
         };
 
 
-        int nextId = 0;
+        int nextId = 1;
         for (Player player : players)
             player.setID(nextId++);
 

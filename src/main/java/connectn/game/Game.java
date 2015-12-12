@@ -3,7 +3,7 @@ package connectn.game;
 import connectn.players.Draw;
 import connectn.players.Player;
 import javafx.util.Pair;
-import sun.plugin.dom.exception.InvalidStateException;
+import java.lang.IllegalStateException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -199,11 +199,11 @@ public class Game {
     /**
      * This is not for access by players, just debuggers.
      * @return
-     * @throws InvalidStateException
+     * @throws IllegalStateException
      */
-    public List<Pair<Class<? extends Player>, Integer>> getPlayerHistory() throws InvalidStateException {
+    public List<Pair<Class<? extends Player>, Integer>> getPlayerHistory() throws IllegalStateException {
         if (!finished)
-            throw new InvalidStateException("Unable to call until finished processing game");
+            throw new IllegalStateException("Unable to call until finished processing game");
 
         return history
                 .stream()

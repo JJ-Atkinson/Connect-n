@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.summingInt;
 public class Runner {
     private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
-    public static int NUMBER_OF_GAMES = 100000;
+    public static int NUMBER_OF_GAMES = 100_000;
 
 
     public void runGames() {
