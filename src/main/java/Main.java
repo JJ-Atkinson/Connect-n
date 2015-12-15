@@ -6,7 +6,6 @@ import connectn.game.Runner;
  */
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Starting simulation");
         new Runner().runGames();
     }
 }

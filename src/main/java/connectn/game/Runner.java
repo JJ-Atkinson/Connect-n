@@ -3,6 +3,9 @@ package connectn.game;
 import connectn.players.Player;
 import connectn.util.ListUtil;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
@@ -18,7 +21,7 @@ import static java.util.stream.Collectors.summingInt;
 public class Runner {
     private static final boolean SHOW_STATISTICS = true;
     private final static int PLAYERS_PER_GAME = 3;
-    public static int NUMBER_OF_GAMES = 100_000;
+    public static int NUMBER_OF_GAMES = 100_00;
 
 
     public void runGames() {
@@ -38,8 +41,22 @@ public class Runner {
 
         Map<Class<? extends Player>, Integer> totalScore = winningCounts(winners);
         System.out.println(prettyPrintScore(totalScore));
+        writeToFile(prettyPrintScore(totalScore));
+
         if (SHOW_STATISTICS)
             printStatistics(games, winners);
+    }
+
+    private void writeToFile(String score) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("ScoreBoard.txt"));
+            writer.write("<pre>");
+            writer.write(score);
+            writer.write("<\\pre>");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
