@@ -1,0 +1,14 @@
+# koth [KOTH-repo-name]
+# github [github-username]
+# name [a longer, multi-word name]
+# description [a description]
+# controller [command]
+# webview [command]
+
+
+koth Connect-n
+github JJ-Atkinson
+name Connect-n time!
+description  A variation of connect 4 for king of the hill.
+controller javac $(find ./rootdir/* | grep .java); java Main
+webview cat ScoreBoard.txt
